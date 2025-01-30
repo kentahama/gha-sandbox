@@ -1,0 +1,60 @@
+name: Test Artifacts
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+env:
+  APP_NAME: testartifacts
+jobs:
+  license:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate licenses.html
+        run: echo "This is licences." > ${{ env.APP_NAME }}-licenses.html
+      - uses: actions/upload-artifact@v4
+        with:
+          name: licenses
+          path: "${{ env.APP_NAME }}-licenses.html"
+          if-no-files-found: error
+        if: ${{ github.event_name == 'release' }}
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - x86_64-unknown-linux-musl
+          - aarch64-unknown-linux-musl
+    steps:
+      - run: |
+          echo "Build result of ${{ matrix.target }}" > build.txt
+          zip "${{ env.APP_NAME }}-${{ matrix.target }}.zip" build.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          path: "${{ env.APP_NAME }}-${{ matrix.target }}.zip"
+          if-no-files-found: error
+  release:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: .
+      - uses: actions/download-artifact@v4
+        with:
+          name: licenses
+          path: .
+      - run: find .
+      # https://github.com/ncipollo/release-action/releases/tag/v1.14.0
+      - uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5
+        with:
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          artifacts: "./artifact/${{ env.APP_NAME }}-*.zip,./${{ env.APP_NAME }}-licenses.html"
+          removeArtifacts: true
+          body: |
+            ${{ github.event.release.body }}
+          draft: ${{ toJSON(github.event.release.draft) }}
+          name: |
+            ${{ github.event.release.name }}
+          prerelease: ${{ steps.release_type.outputs.value != 'release' }}
