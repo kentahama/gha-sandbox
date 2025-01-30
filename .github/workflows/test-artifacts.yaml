@@ -31,6 +31,7 @@ jobs:
           zip "${{ env.APP_NAME }}-${{ matrix.target }}.zip" build.txt
       - uses: actions/upload-artifact@v4
         with:
+          name: ${{ env.APP_NAME }}-${{ matrix.target }}
           path: "${{ env.APP_NAME }}-${{ matrix.target }}.zip"
           if-no-files-found: error
   release:
