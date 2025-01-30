@@ -41,10 +41,6 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: .
-      - uses: actions/download-artifact@v4
-        with:
-          name: licenses
-          path: .
       - run: find .
       # https://github.com/ncipollo/release-action/releases/tag/v1.14.0
       - uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5
