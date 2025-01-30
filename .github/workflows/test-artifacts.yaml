@@ -51,7 +51,7 @@ jobs:
         with:
           allowUpdates: true
           artifactErrorsFailBuild: true
-          artifacts: "./artifact/${{ env.APP_NAME }}-*.zip,./${{ env.APP_NAME }}-licenses.html"
+          artifacts: "./${{ env.APP_NAME }}-*/${{ env.APP_NAME }}-*.zip,./licenses/${{ env.APP_NAME }}-licenses.html"
           removeArtifacts: true
           body: |
             ${{ github.event.release.body }}
