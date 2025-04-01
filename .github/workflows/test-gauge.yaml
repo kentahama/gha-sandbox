@@ -1,0 +1,19 @@
+name: Setup gauge
+description: gauge のセットアップを行う
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup-gauge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: getgauge/setup-gauge@added720d40c1f1839019ee169c1e9e81eb43c5e
+        with:
+          gauge-version: 1.6.14
+          gauge-plugins: html-report, spectacle, screenshot
+
+      - name: Information
+        shell: bash
+        run: |
+          gauge version
