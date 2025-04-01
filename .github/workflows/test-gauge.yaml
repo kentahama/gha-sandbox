@@ -11,7 +11,7 @@ jobs:
       - uses: getgauge/setup-gauge@added720d40c1f1839019ee169c1e9e81eb43c5e
         with:
           gauge-version: 1.6.14
-          gauge-plugins: html-report, spectacle, screenshot
+          gauge-plugins: html-report, spectacle, screenshot, ts
 
       - name: Information
         shell: bash
